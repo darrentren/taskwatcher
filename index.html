@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Watcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── TOKENS ─── */
+:root {
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --bg:#c8d4c3; --sidebar:#fff; --content:#f3f4f6;
+  --t1:#1c1c1e; --t2:#48484a; --t3:#8e8e93;
+  --border:#e4e6ea; --border2:#cdd0d8; --hover:#f2f3f5; --active:#ebebed; --input-bg:#f0f1f3;
+  --cy-bg:#fef9c3; --cy-t:#78350f; --cy-b:#92400e;
+  --cb-bg:#dbeafe; --cb-t:#1e3a8a; --cb-b:#1e40af;
+  --cg-bg:#d1fae5; --cg-t:#064e3b; --cg-b:#065f46;
+  --co-bg:#fed7aa; --co-t:#92400e; --co-b:#9a3412;
+  --cp-bg:#fce7f3; --cp-t:#831843; --cp-b:#9d174d;
+  --accent:#4f46e5; --accent-dim:rgba(79,70,229,.1);
+  --wa:#25d366; --meet:#4285f4; --red:#ef4444;
+  --sh-card:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-hover:0 6px 20px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.06);
+  --sh-modal:0 24px 80px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.08);
+  --sh-drawer:-4px 0 32px rgba(0,0,0,.1);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0f1a0f; --sidebar:#1a231a; --content:#131b13;
+  --t1:#f2f2f7; --t2:#aeaeb2; --t3:#636366;
+  --border:#253025; --border2:#2e3d2e; --hover:#1e291e; --active:#253025; --input-bg:#1e291e;
+  --cy-bg:#28230a; --cy-t:#fde68a; --cy-b:#fef08a;
+  --cb-bg:#0c1a32; --cb-t:#93c5fd; --cb-b:#bfdbfe;
+  --cg-bg:#031a0f; --cg-t:#6ee7b7; --cg-b:#a7f3d0;
+  --co-bg:#2a1500; --co-t:#fdba74; --co-b:#fed7aa;
+  --cp-bg:#220b16; --cp-t:#f9a8d4; --cp-b:#fbcfe8;
+  --sh-card:0 1px 4px rgba(0,0,0,.35); --sh-hover:0 6px 20px rgba(0,0,0,.5);
+  --sh-modal:0 24px 80px rgba(0,0,0,.65); --sh-drawer:-4px 0 40px rgba(0,0,0,.55);
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1a0f; --sidebar:#1a231a; --content:#131b13;
+  --t1:#f2f2f7; --t2:#aeaeb2; --t3:#636366;
+  --border:#253025; --border2:#2e3d2e; --hover:#1e291e; --active:#253025; --input-bg:#1e291e;
+  --cy-bg:#28230a; --cy-t:#fde68a; --cy-b:#fef08a;
+  --cb-bg:#0c1a32; --cb-t:#93c5fd; --cb-b:#bfdbfe;
+  --cg-bg:#031a0f; --cg-t:#6ee7b7; --cg-b:#a7f3d0;
+  --co-bg:#2a1500; --co-t:#fdba74; --co-b:#fed7aa;
+  --cp-bg:#220b16; --cp-t:#f9a8d4; --cp-b:#fbcfe8;
+  --sh-card:0 1px 4px rgba(0,0,0,.35); --sh-hover:0 6px 20px rgba(0,0,0,.5);
+  --sh-modal:0 24px 80px rgba(0,0,0,.65); --sh-drawer:-4px 0 40px rgba(0,0,0,.55);
+}
+:root[data-theme="light"]{
+  --bg:#c8d4c3; --sidebar:#fff; --content:#f3f4f6;
+  --t1:#1c1c1e; --t2:#48484a; --t3:#8e8e93;
+  --border:#e4e6ea; --border2:#cdd0d8; --hover:#f2f3f5; --active:#ebebed; --input-bg:#f0f1f3;
+  --cy-bg:#fef9c3; --cy-t:#78350f; --cy-b:#92400e;
+  --cb-bg:#dbeafe; --cb-t:#1e3a8a; --cb-b:#1e40af;
+  --cg-bg:#d1fae5; --cg-t:#064e3b; --cg-b:#065f46;
+  --co-bg:#fed7aa; --co-t:#92400e; --co-b:#9a3412;
+  --cp-bg:#fce7f3; --cp-t:#831843; --cp-b:#9d174d;
+  --sh-card:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-hover:0 6px 20px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.06);
+  --sh-modal:0 24px 80px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.08);
+  --sh-drawer:-4px 0 32px rgba(0,0,0,.1);
+}
+
+body{font-family:var(--font);background:var(--bg);color:var(--t1);height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:16px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ─── SHELL ─── */
+.app{display:flex;width:100%;max-width:1300px;height:calc(100vh - 32px);background:var(--content);border-radius:18px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.08)}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:248px;flex-shrink:0;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sb-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 18px 14px}
+.sb-logo{display:flex;align-items:center;gap:9px}
+.sb-mark{width:28px;height:28px;background:var(--t1);border-radius:7px;display:grid;place-items:center;color:var(--sidebar);font-size:14px;flex-shrink:0}
+.sb-name{font-size:15px;font-weight:700}
+.sb-btns{display:flex;gap:4px}
+.icon-btn{width:30px;height:30px;display:grid;place-items:center;border:none;background:transparent;color:var(--t3);border-radius:8px;cursor:pointer;font-size:14px;transition:background .12s,color .12s}
+.icon-btn:hover{background:var(--hover);color:var(--t1)}
+.sb-search{padding:0 14px 14px}
+.sb-search-wrap{display:flex;align-items:center;gap:8px;background:var(--input-bg);border-radius:10px;padding:8px 12px}
+.sb-search-wrap svg{flex-shrink:0;color:var(--t3)}
+.sb-search-wrap input{flex:1;border:none;background:transparent;color:var(--t1);font-size:13px;outline:none;font-family:var(--font)}
+.sb-search-wrap input::placeholder{color:var(--t3)}
+.sb-sec{padding:0 10px 10px}
+.sb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--t3);padding:8px 8px 5px;display:block}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:9px;border:none;background:transparent;color:var(--t2);font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;transition:background .1s,color .1s;font-family:var(--font)}
+.nav-btn:hover{background:var(--hover);color:var(--t1)}
+.nav-btn.active{background:var(--active);color:var(--t1);font-weight:600}
+.nb-icon{width:20px;height:20px;display:grid;place-items:center;font-size:14px;opacity:.65;flex-shrink:0}
+.nav-btn.active .nb-icon{opacity:1}
+.nb-count{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--t3);background:var(--input-bg);min-width:22px;height:19px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.nav-btn.active .nb-count{background:var(--accent);color:#fff}
+.src-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:9px;border:none;background:transparent;color:var(--t2);font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;transition:background .1s,color .1s;font-family:var(--font)}
+.src-btn:hover{background:var(--hover);color:var(--t1)}
+.src-btn.active{background:var(--active);color:var(--t1);font-weight:600}
+.src-pip{width:13px;height:13px;border-radius:3px;flex-shrink:0}
+.pip-all{background:linear-gradient(135deg,#fde68a 0%,#93c5fd 50%,#6ee7b7 100%)}
+.pip-wa{background:var(--wa)}.pip-meet{background:var(--meet)}.pip-manual{background:var(--accent)}
+.src-cnt{margin-left:auto;font-size:12px;font-weight:600;color:var(--t3)}
+.tag-chips{display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 14px}
+.tag-chip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:border-color .12s,opacity .12s;font-family:var(--font);opacity:.75}
+.tag-chip:hover{opacity:1}.tag-chip.tc-on{border-color:currentColor;opacity:1}
+.chip-y{background:var(--cy-bg);color:var(--cy-t)}.chip-b{background:var(--cb-bg);color:var(--cb-t)}.chip-g{background:var(--cg-bg);color:var(--cg-t)}
+.sb-bottom{margin-top:auto;border-top:1px solid var(--border);padding:10px}
+.ws-row{display:flex;align-items:center;gap:8px;padding:7px 8px;font-size:11.5px;color:var(--t3)}
+.ws-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .3s}
+.ws-dot.live{background:#22c55e;box-shadow:0 0 5px #22c55e}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px;border-radius:9px;border:none;background:transparent;color:var(--t2);font-size:13px;cursor:pointer;font-family:var(--font);transition:background .1s,color .1s;width:100%}
+.sb-link:hover{background:var(--hover);color:var(--t1)}
+
+/* ─── MAIN ─── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;padding:26px 28px 18px;flex-shrink:0}
+.page-title{font-size:26px;font-weight:800;color:var(--t1);letter-spacing:-.4px}
+.page-hdr-r{display:flex;align-items:center;gap:8px}
+.hdr-pill{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--sidebar);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;font-family:var(--font);color:var(--t2)}
+.hdr-pill:hover{border-color:var(--border2);color:var(--t1);box-shadow:var(--sh-card)}
+.hp-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);transition:background .3s}
+.wa-pill{color:var(--wa);border-color:rgba(37,211,102,.3);background:rgba(37,211,102,.06)}
+.wa-pill.connected .hp-dot{background:var(--wa);box-shadow:0 0 5px var(--wa);animation:blink 2s infinite}
+.wa-pill.connecting .hp-dot{background:#f59e0b;animation:blink .8s infinite}
+.meet-pill{color:var(--meet);border-color:rgba(66,133,244,.3);background:rgba(66,133,244,.06)}
+.meet-pill.live .hp-dot{background:#ea4335;box-shadow:0 0 5px #ea4335;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.new-task-btn{display:flex;align-items:center;gap:6px;padding:8px 18px;border-radius:20px;background:var(--t1);color:var(--sidebar);border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .12s,transform .12s}
+.new-task-btn:hover{opacity:.82;transform:translateY(-1px)}
+
+/* ─── WALL ─── */
+.wall-wrap{flex:1;overflow-y:auto;padding:0 24px 24px}
+.sticky-wall{columns:3;column-gap:14px}
+@media(max-width:1000px){.sticky-wall{columns:2}}
+.wall-empty{text-align:center;padding:80px 40px}
+.wall-empty-icon{font-size:52px;margin-bottom:16px}
+.wall-empty h3{font-size:17px;font-weight:700;color:var(--t2);margin-bottom:6px}
+.wall-empty p{font-size:13.5px;color:var(--t3);line-height:1.6}
+
+/* ─── CARDS ─── */
+.s-card{break-inside:avoid;margin-bottom:14px;border-radius:16px;padding:18px 20px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:var(--sh-card)}
+.s-card:hover{transform:translateY(-3px);box-shadow:var(--sh-hover)}
+.c-yellow{background:var(--cy-bg)}.c-blue{background:var(--cb-bg)}.c-green{background:var(--cg-bg)}.c-orange{background:var(--co-bg)}.c-pink{background:var(--cp-bg)}
+.s-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.s-src-badge{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.55)}
+[data-theme="dark"] .s-src-badge{background:rgba(0,0,0,.22)}
+.badge-wa{color:#065f46}[data-theme="dark"] .badge-wa{color:#6ee7b7}
+.badge-meet{color:#1e3a8a}[data-theme="dark"] .badge-meet{color:#93c5fd}
+.card-dots{display:flex;gap:3px;opacity:.35;padding-top:2px}
+.card-dots span{width:4px;height:4px;border-radius:50%;background:currentColor;display:block}
+.c-yellow .card-dots,.c-yellow .s-card-title{color:var(--cy-t)}
+.c-blue   .card-dots,.c-blue   .s-card-title{color:var(--cb-t)}
+.c-green  .card-dots,.c-green  .s-card-title{color:var(--cg-t)}
+.c-orange .card-dots,.c-orange .s-card-title{color:var(--co-t)}
+.c-pink   .card-dots,.c-pink   .s-card-title{color:var(--cp-t)}
+.s-card-title{font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:7px}
+.s-card-body{font-size:13px;line-height:1.55;margin-bottom:8px}
+.c-yellow .s-card-body{color:var(--cy-b)}.c-blue .s-card-body{color:var(--cb-b)}.c-green .s-card-body{color:var(--cg-b)}.c-orange .s-card-body{color:var(--co-b)}.c-pink .s-card-body{color:var(--cp-b)}
+.s-card-path{font-size:10.5px;font-family:'Courier New',monospace;opacity:.55;margin-bottom:8px;word-break:break-all}
+.s-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.s-card-time{font-size:11px;opacity:.5;font-weight:500}
+.s-card-badge{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:10px;background:rgba(255,255,255,.5)}
+[data-theme="dark"] .s-card-badge{background:rgba(0,0,0,.2)}
+.c-yellow .s-card-badge{color:var(--cy-t)}.c-blue .s-card-badge{color:var(--cb-t)}.c-green .s-card-badge{color:var(--cg-t)}.c-orange .s-card-badge{color:var(--co-t)}.c-pink .s-card-badge{color:var(--cp-t)}
+.s-card-add{break-inside:avoid;margin-bottom:14px;border-radius:16px;min-height:110px;border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,background .15s}
+.s-card-add:hover{border-color:var(--accent);background:var(--accent-dim)}
+.s-card-add-plus{font-size:30px;line-height:1;color:var(--t3);font-weight:300;transition:color .15s}
+.s-card-add:hover .s-card-add-plus{color:var(--accent)}
+
+/* ─── DRAWERS ─── */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:96vw;background:var(--sidebar);border-left:1px solid var(--border);z-index:300;transform:translateX(100%);transition:transform .24s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:var(--sh-drawer)}
+.drawer.open{transform:translateX(0)}
+.dr-hdr{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.dr-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.dr-icon.wa{background:rgba(37,211,102,.1)}.dr-icon.meet{background:rgba(66,133,244,.1)}
+.dr-tw{flex:1}.dr-tw h2{font-size:15px;font-weight:700}.dr-tw p{font-size:11.5px;color:var(--t3);margin-top:1px}
+.dr-close{width:30px;height:30px;display:grid;place-items:center;background:var(--input-bg);border:none;border-radius:8px;cursor:pointer;color:var(--t3);font-size:13px;transition:color .12s}
+.dr-close:hover{color:var(--t1)}
+.dr-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px}
+.dr-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--t3);margin-bottom:9px}
+.dr-sep{height:1px;background:var(--border)}
+.dr-inp{width:100%;background:var(--input-bg);border:1.5px solid transparent;color:var(--t1);padding:9px 12px;border-radius:10px;font-size:13px;outline:none;font-family:var(--font);transition:border-color .15s}
+.dr-inp:focus{border-color:var(--accent)}.dr-inp.wa-inp:focus{border-color:var(--wa)}.dr-inp.mt-inp:focus{border-color:var(--meet)}
+.dr-inp::placeholder{color:var(--t3)}
+.dr-row{display:flex;gap:7px}.dr-row .dr-inp{flex:1}
+.dr-btn{padding:9px 15px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);white-space:nowrap;transition:opacity .12s}
+.dr-btn:hover{opacity:.8}
+.wa-btn-s{background:rgba(37,211,102,.12);color:var(--wa)}.mt-btn-s{background:rgba(66,133,244,.12);color:var(--meet)}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0}
+.tog-label{font-size:13.5px;color:var(--t2);font-weight:500}
+.sw{position:relative;width:40px;height:22px;flex-shrink:0}
+.sw input{opacity:0;width:0;height:0}
+.sw-sl{position:absolute;inset:0;background:var(--border2);border-radius:22px;cursor:pointer;transition:background .18s}
+.sw-sl::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .18s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input:checked+.sw-sl{background:var(--wa)}.sw input:checked+.sw-sl::before{transform:translateX(18px)}
+.sw.mt-sw input:checked+.sw-sl{background:var(--meet)}
+.wa-profile{display:flex;align-items:center;gap:12px;padding:14px 15px;background:rgba(37,211,102,.07);border:1.5px solid rgba(37,211,102,.2);border-radius:13px}
+.wa-ava{width:42px;height:42px;border-radius:50%;background:rgba(37,211,102,.15);display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.wa-profile-name{font-size:14px;font-weight:700;color:var(--wa)}.wa-profile-num{font-size:12px;color:var(--t3);margin-top:2px}
+.status-banner{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;border:1.5px solid var(--border);background:var(--input-bg)}
+.status-banner.live{background:rgba(234,67,53,.06);border-color:rgba(234,67,53,.3)}
+.sb-ldot{width:9px;height:9px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .2s}
+.status-banner.live .sb-ldot{background:#ea4335;box-shadow:0 0 7px #ea4335;animation:blink 1s infinite}
+.sb-info-title{font-size:13.5px;font-weight:600}.sb-info-sub{font-size:11.5px;color:var(--t3);margin-top:2px}
+.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+.kw-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;background:var(--input-bg);border:1px solid var(--border2);font-size:12px;color:var(--t2)}
+.kw-chip button{background:none;border:none;color:var(--t3);cursor:pointer;font-size:15px;line-height:1;padding:0}
+.kw-chip button:hover{color:var(--red)}
+.log-wrap{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.log-entry{background:var(--input-bg);border-radius:10px;padding:9px 11px;border:1.5px solid transparent}
+.log-entry.task-hi{border-color:rgba(37,211,102,.3)}.log-entry.meet-hi{border-color:rgba(234,67,53,.3)}
+.log-sender{font-size:11px;font-weight:700;display:flex;justify-content:space-between;margin-bottom:3px}
+.log-sender.wa-col{color:var(--wa)}.log-sender.meet-col{color:var(--meet)}
+.log-ts{color:var(--t3);font-weight:400}.log-txt{font-size:12px;color:var(--t2);line-height:1.45}
+.log-flg{font-size:10px;margin-top:4px;font-weight:700}.log-flg.wa-f{color:var(--wa)}.log-flg.meet-f{color:#ea4335}
+.empty-log{text-align:center;padding:18px;font-size:12.5px;color:var(--t3)}
+.state-center{text-align:center;padding:28px 8px}
+.state-em{font-size:54px;margin-bottom:16px}.state-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.state-sub{font-size:13px;color:var(--t3);line-height:1.7;margin-bottom:22px}.state-note{font-size:11px;color:var(--t3);opacity:.7;margin-top:10px}
+.big-btn{background:var(--wa);border:none;color:#000;padding:12px 30px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .12s,transform .12s}
+.big-btn:hover{opacity:.88;transform:translateY(-1px)}
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--wa);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+.spinner.mt{border-top-color:var(--meet)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.qr-wrap{text-align:center;padding:8px 0}
+.qr-img{width:210px;height:210px;border-radius:13px;background:#fff;padding:7px;display:block;margin:0 auto 12px;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+.qr-hint{font-size:12.5px;color:var(--t3);margin-bottom:15px}
+.qr-steps{display:flex;flex-direction:column;gap:10px;text-align:left}
+.qr-step{display:flex;gap:10px;font-size:12.5px;color:var(--t2);line-height:1.5}
+.sn{width:21px;height:21px;border-radius:50%;background:rgba(37,211,102,.12);color:var(--wa);display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sn.mt{background:rgba(66,133,244,.12);color:var(--meet)}
+.danger-btn{width:100%;padding:10px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.2);color:var(--red);border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .12s}
+.danger-btn:hover{background:rgba(239,68,68,.13);border-color:var(--red)}
+.note-card{background:var(--input-bg);border-radius:12px;border:1.5px solid var(--border);overflow:hidden;margin-bottom:8px}
+.note-hdr{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer}
+.note-meta{flex:1;min-width:0}.note-meta-t{font-size:13px;font-weight:600}.note-meta-i{font-size:11px;color:var(--t3);margin-top:2px}
+.note-acts{display:flex;align-items:center;gap:2px}
+.note-act{width:27px;height:27px;display:grid;place-items:center;background:none;border:none;cursor:pointer;border-radius:7px;font-size:13px;opacity:.5;transition:all .12s}
+.note-act:hover{opacity:1;background:var(--hover)}
+.note-chev{font-size:10px;color:var(--t3);margin-left:2px;transition:transform .2s}.note-chev.open{transform:rotate(90deg)}
+.note-body{border-top:1px solid var(--border);padding:10px 13px;max-height:270px;overflow-y:auto}.note-body.closed{display:none}
+.note-cap{font-size:12px;line-height:1.5;padding:5px 0;border-bottom:1px solid var(--border)}.note-cap:last-child{border-bottom:none}
+.note-cap.is-task{background:rgba(234,67,53,.06);border-radius:5px;padding:4px 8px;margin:0 -8px}
+.cap-speaker{font-weight:700;color:var(--meet)}.cap-time{color:var(--t3);font-size:10.5px;margin-left:5px}
+.cap-badge{background:#ea4335;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px}
+.cap-text{color:var(--t2);margin-top:2px}
+.setup-steps{display:flex;flex-direction:column;gap:11px}
+.setup-step{display:flex;gap:10px;font-size:12.5px;color:var(--t2);line-height:1.5}
+.path-chip{background:var(--content);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'Courier New',monospace;font-size:10.5px;color:var(--t3);word-break:break-all;margin-top:4px}
+
+/* ─── MODALS ─── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .16s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--sidebar);border:1px solid var(--border);border-radius:18px;width:500px;max-width:94vw;box-shadow:var(--sh-modal);transform:translateY(10px) scale(.97);transition:transform .18s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.overlay.open .modal{transform:none}
+.m-hdr{padding:20px 22px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.m-hdr h2{font-size:16px;font-weight:700}
+.m-close{width:29px;height:29px;display:grid;place-items:center;background:var(--input-bg);border:none;border-radius:8px;cursor:pointer;color:var(--t3);font-size:13px;transition:color .12s}
+.m-close:hover{color:var(--t1)}
+.m-body{padding:20px 22px;display:flex;flex-direction:column;gap:15px}
+.m-label{display:block;font-size:11.5px;font-weight:600;color:var(--t2);margin-bottom:5px}
+.m-inp{width:100%;background:var(--input-bg);border:1.5px solid transparent;color:var(--t1);padding:9px 12px;border-radius:10px;font-size:13.5px;outline:none;font-family:var(--font);transition:border-color .15s}
+.m-inp:focus{border-color:var(--accent)}.m-inp::placeholder{color:var(--t3)}
+textarea.m-inp{resize:vertical;min-height:62px;line-height:1.5}
+select.m-inp{cursor:pointer}select.m-inp option{background:var(--sidebar)}
+.m-path-row{display:flex;gap:7px}.m-path-row .m-inp{flex:1}
+.browse-btn{background:var(--input-bg);border:1.5px solid var(--border2);color:var(--t2);padding:9px 13px;border-radius:10px;font-size:12.5px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:border-color .12s}
+.browse-btn:hover{border-color:var(--accent);color:var(--t1)}
+.m-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn-cancel{background:transparent;border:1.5px solid var(--border2);color:var(--t2);padding:8px 19px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:border-color .12s}
+.btn-cancel:hover{border-color:var(--border);color:var(--t1)}
+.btn-primary{background:var(--t1);border:none;color:var(--sidebar);padding:8px 21px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .12s}
+.btn-primary:hover{opacity:.82}
+/* detail */
+.det-strip{height:5px;width:calc(100% + 44px);margin:-0px -22px 16px}
+.det-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.det-sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.det-sdot.pending{background:#f59e0b}.det-sdot.watching{background:var(--accent);animation:blink 2s infinite}.det-sdot.done{background:#22c55e}
+.det-spill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px}
+.spl-pending{background:var(--cy-bg);color:var(--cy-t)}.spl-watching{background:var(--cb-bg);color:var(--cb-t)}.spl-done{background:var(--cg-bg);color:var(--cg-t)}
+.det-title{font-size:20px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px}
+.det-desc{font-size:13.5px;color:var(--t2);line-height:1.6;margin-bottom:16px}
+.det-actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.det-act{padding:7px 14px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid transparent;font-family:var(--font);transition:opacity .12s}
+.det-act:hover{opacity:.8}
+.da-watch{background:var(--cb-bg);color:var(--cb-t)}.da-done{background:var(--cg-bg);color:var(--cg-t)}
+.da-reset{background:var(--input-bg);border-color:var(--border2);color:var(--t2)}
+.da-del{background:rgba(239,68,68,.08);color:var(--red);margin-left:auto}.da-del:hover{background:rgba(239,68,68,.14)}
+.det-fields{display:flex;flex-direction:column;gap:11px}
+.det-fl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:4px}
+.det-fv{background:var(--input-bg);border-radius:9px;padding:8px 12px;font-size:13px;color:var(--t2);line-height:1.5;word-break:break-all}
+.det-fv.mono{font-family:'Courier New',monospace;font-size:11px}
+/* file browser */
+.fb-path{padding:8px 16px;font-size:11px;font-family:monospace;background:var(--input-bg);color:var(--t3);border-bottom:1px solid var(--border)}
+.fb-list{max-height:270px;overflow-y:auto}
+.fb-item{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);color:var(--t2);transition:background .1s}
+.fb-item:hover{background:var(--hover);color:var(--t1)}.fb-item.fb-up{color:var(--t3)}
+.fb-footer{padding:12px 16px;display:flex;gap:7px;border-top:1px solid var(--border)}
+.fb-sel-f{flex:1;background:var(--t1);border:none;color:var(--sidebar);padding:9px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.fb-sel-fi{flex:1;background:var(--input-bg);border:1.5px solid var(--border2);color:var(--t2);padding:9px;border-radius:10px;font-size:12.5px;cursor:pointer;font-family:var(--font);transition:border-color .12s}
+.fb-sel-fi:hover{border-color:var(--border);color:var(--t1)}
+
+/* ─── TOASTS ─── */
+#toasts{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:9000;pointer-events:none}
+.toast{background:var(--sidebar);border:1.5px solid var(--border2);border-radius:13px;padding:12px 15px;box-shadow:0 10px 36px rgba(0,0,0,.16);min-width:268px;max-width:350px;pointer-events:all;animation:tIn .2s cubic-bezier(.4,0,.2,1);display:flex;gap:10px;align-items:flex-start}
+.toast-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.toast.t-green .toast-dot{background:#22c55e;box-shadow:0 0 5px #22c55e}
+.toast.t-wa .toast-dot{background:var(--wa);box-shadow:0 0 5px var(--wa)}
+.toast.t-meet .toast-dot{background:var(--meet);box-shadow:0 0 5px var(--meet)}
+.toast-title{font-size:13px;font-weight:700}.toast-body{font-size:12px;color:var(--t2);margin-top:2px}.toast-sub{font-size:11px;color:var(--t3);margin-top:1px}
+.toast.fading{animation:tOut .22s ease forwards}
+@keyframes tIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes tOut{from{opacity:1}to{opacity:0;transform:translateY(6px)}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-hdr">
+      <div class="sb-logo"><div class="sb-mark">🎯</div><span class="sb-name">Menu</span></div>
+      <div class="sb-btns">
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+        <button class="icon-btn" title="Settings">⚙</button>
+      </div>
+    </div>
+
+    <div class="sb-search">
+      <div class="sb-search-wrap">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Search tasks…" id="search-inp" oninput="onSearch(this.value)">
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Tasks</span>
+      <button class="nav-btn active" onclick="setFilter('all',this)">
+        <span class="nb-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9.5" y="1.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9.5" y="9.5" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></span>
+        Sticky Wall<span class="nb-count" id="cnt-all">0</span>
+      </button>
+      <button class="nav-btn" onclick="setFilter('pending',this)">
+        <span class="nb-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.5l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        Upcoming<span class="nb-count" id="cnt-pending">0</span>
+      </button>
+      <button class="nav-btn" onclick="setFilter('watching',this)">
+        <span class="nb-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8.5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M1.5 8.5s2.5-5 6.5-5 6.5 5 6.5 5-2.5 5-6.5 5-6.5-5-6.5-5Z" stroke="currentColor" stroke-width="1.5"/></svg></span>
+        Watching<span class="nb-count" id="cnt-watching">0</span>
+      </button>
+      <button class="nav-btn" onclick="setFilter('done',this)">
+        <span class="nb-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        Done<span class="nb-count" id="cnt-done">0</span>
+      </button>
+    </div>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Lists</span>
+      <button class="src-btn active" onclick="setFilter('all',null)"><div class="src-pip pip-all"></div>All tasks<span class="src-cnt" id="cnt-all2">0</span></button>
+      <button class="src-btn" onclick="setFilter('whatsapp',null)"><div class="src-pip pip-wa"></div>WhatsApp<span class="src-cnt" id="cnt-wa">0</span></button>
+      <button class="src-btn" onclick="setFilter('meet',null)"><div class="src-pip pip-meet"></div>Google Meet<span class="src-cnt" id="cnt-meet">0</span></button>
+      <button class="src-btn" onclick="setFilter('manual',null)"><div class="src-pip pip-manual"></div>Manual<span class="src-cnt" id="cnt-manual">0</span></button>
+    </div>
+
+    <div class="sb-sec">
+      <span class="sb-lbl">Tags</span>
+      <div class="tag-chips">
+        <span class="tag-chip chip-y tc-on" onclick="toggleTagFilter('pending',this)">Pending</span>
+        <span class="tag-chip chip-b tc-on" onclick="toggleTagFilter('watching',this)">Watching</span>
+        <span class="tag-chip chip-g tc-on" onclick="toggleTagFilter('done',this)">Done</span>
+      </div>
+    </div>
+
+    <div class="sb-bottom">
+      <div class="ws-row"><div class="ws-dot" id="ws-dot"></div><span id="ws-lbl">Connecting…</span></div>
+      <button class="sb-link" onclick="toggleWaDrawer()"><span class="nb-icon">💬</span><span id="wa-sb-label">WhatsApp</span></button>
+      <button class="sb-link" onclick="toggleMeetDrawer()"><span class="nb-icon">🎥</span><span id="meet-sb-label">Google Meet</span></button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="page-hdr">
+      <h1 class="page-title">Sticky Wall</h1>
+      <div class="page-hdr-r">
+        <button class="hdr-pill meet-pill" id="meet-pill" onclick="toggleMeetDrawer()"><div class="hp-dot"></div><span id="meet-pill-lbl">Google Meet</span></button>
+        <button class="hdr-pill wa-pill" id="wa-pill" onclick="toggleWaDrawer()"><div class="hp-dot"></div><span id="wa-pill-lbl">WhatsApp</span></button>
+        <button class="new-task-btn" onclick="openAddModal()">
+          <svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          New Task
+        </button>
+      </div>
+    </div>
+    <div class="wall-wrap">
+      <div id="wall-empty" style="display:none" class="wall-empty">
+        <div class="wall-empty-icon">📌</div>
+        <h3>Nothing pinned yet</h3>
+        <p>Add your first task with the button above, or connect WhatsApp to auto-capture tasks.</p>
+      </div>
+      <div class="sticky-wall" id="task-grid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- WA DRAWER -->
+<div class="drawer" id="wa-drawer">
+  <div class="dr-hdr"><div class="dr-icon wa">💬</div><div class="dr-tw"><h2>WhatsApp</h2><p>Auto-detect tasks from messages</p></div><button class="dr-close" onclick="toggleWaDrawer()">✕</button></div>
+  <div class="dr-body" id="wa-body"></div>
+</div>
+
+<!-- MEET DRAWER -->
+<div class="drawer" id="meet-drawer">
+  <div class="dr-hdr"><div class="dr-icon meet">🎥</div><div class="dr-tw"><h2>Google Meet</h2><p>Caption monitoring &amp; meeting notes</p></div><button class="dr-close" onclick="toggleMeetDrawer()">✕</button></div>
+  <div class="dr-body" id="meet-body"></div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="overlay" id="task-modal">
+  <div class="modal">
+    <div class="m-hdr"><h2>New Task</h2><button class="m-close" onclick="closeModal()">✕</button></div>
+    <div class="m-body">
+      <div><label class="m-label">Task name *</label><input class="m-inp" type="text" id="inp-name" placeholder="What needs to be done?"></div>
+      <div><label class="m-label">Description</label><textarea class="m-inp" id="inp-desc" placeholder="Additional context…" rows="2"></textarea></div>
+      <div><label class="m-label">Watch type</label><select class="m-inp" id="inp-type"><option value="folder">Folder — any change inside</option><option value="file">File — specific file</option></select></div>
+      <div><label class="m-label">Path to watch</label><div class="m-path-row"><input class="m-inp" type="text" id="inp-path" placeholder="C:\FxServer\txData\…"><button class="browse-btn" onclick="openBrowser()">Browse</button></div></div>
+      <div><label class="m-label">File pattern <span style="font-weight:400;color:var(--t3)">(e.g. *.log)</span></label><input class="m-inp" type="text" id="inp-pattern" placeholder="*" value="*"></div>
+    </div>
+    <div class="m-footer"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveTask()">Add Task</button></div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detail-modal">
+  <div class="modal">
+    <div class="m-hdr" style="border-bottom:none;padding-bottom:8px"><h2 id="det-modal-title">Task</h2><button class="m-close" onclick="closeDetail()">✕</button></div>
+    <div class="m-body" id="detail-content" style="padding-top:4px"></div>
+    <div style="height:10px"></div>
+  </div>
+</div>
+
+<!-- FILE BROWSER -->
+<div class="overlay" id="fb-modal">
+  <div class="modal">
+    <div class="m-hdr"><h2>Browse</h2><button class="m-close" onclick="closeBrowser()">✕</button></div>
+    <div class="fb-path" id="fb-path">C:\</div>
+    <div class="fb-list" id="fb-list"></div>
+    <div class="fb-footer"><button class="fb-sel-f" onclick="selectPath(false)">📁 Use This Folder</button><button class="fb-sel-fi" onclick="selectPath(true)">Select File</button></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+let tasks=[],selectedId=null,filter='all',searchQuery='';
+let tagFilters={pending:true,watching:true,done:true};
+let ws=null,fbCurrentPath='C:\\',fbSelectedFile=null;
+let waStatus='disconnected',waInfo=null,waQrDataUrl=null;
+let waSettings={autoCreate:true,keywords:[],monitoredContacts:[],monitorGroups:false,monitoredGroups:[]};
+let waMessages=[],waDrawerOpen=false,waGroups=[];
+let meetStatus={inMeeting:false,title:'',url:''};
+let meetSettings={userName:'',autoCreate:true,keywords:[],requireNameMention:true};
+let meetCaptions=[],meetNotes=[],meetDrawerOpen=false;
+
+function connectWS(){
+  ws=new WebSocket(`ws://${location.host}`);
+  ws.onopen=()=>setDot(true);
+  ws.onclose=()=>{setDot(false);setTimeout(connectWS,2000)};
+  ws.onmessage=e=>handleWsMsg(JSON.parse(e.data));
+}
+function handleWsMsg(m){
+  switch(m.type){
+    case'init':tasks=m.tasks||[];waStatus=m.waStatus||'disconnected';waInfo=m.waInfo||null;waQrDataUrl=m.waQrDataUrl||null;waSettings=m.waSettings||waSettings;meetStatus=m.meetStatus||meetStatus;meetSettings=m.meetSettings||meetSettings;renderAll();renderWaHeader();renderMeetHeader();if(waDrawerOpen)renderWaPanel();if(meetDrawerOpen)renderMeetPanel();break;
+    case'task_done':updateTask(m.task);renderAll();if(selectedId===m.task.id)renderDetailContent(m.task);showToast('Task Complete!',m.task.name,'','green');beep(880);break;
+    case'task_from_wa':tasks.unshift(m.task);renderAll();showToast('Task from WhatsApp',m.sender,m.preview,'wa');beep(660);if(waDrawerOpen)renderWaPanel();break;
+    case'wa_status':waStatus=m.status;if(m.info)waInfo=m.info;if(m.qrDataUrl)waQrDataUrl=m.qrDataUrl;if(m.status==='ready')waQrDataUrl=null;renderWaHeader();if(waDrawerOpen)renderWaPanel();if(m.status==='ready')showToast('WhatsApp','Connected',waInfo?.name||'','wa');if(m.status==='reconnecting')showToast('WhatsApp','Reconnecting…','Connection lost, retrying in 5s','wa');break;
+    case'meet_status':meetStatus=m.meetStatus;renderMeetHeader();if(meetDrawerOpen)renderMeetPanel();if(m.meetStatus.inMeeting)showToast('Google Meet',m.meetStatus.title||'Meeting started','Monitoring captions…','meet');break;
+    case'meet_caption':meetCaptions.unshift(m.caption);if(meetCaptions.length>200)meetCaptions.pop();if(meetDrawerOpen)renderMeetCaptions();break;
+    case'task_from_meet':tasks.unshift(m.task);renderAll();showToast('Task from Meeting',m.speaker,m.preview,'meet');beep(550);break;
+    case'meet_note_saved':meetNotes.unshift(m.note);if(meetDrawerOpen)renderMeetNotes();showToast('Meeting Notes',m.note.title,`${m.note.captionCount} captions`,'meet');break;
+    case'wa_message':waMessages.unshift(m.message);if(waMessages.length>100)waMessages.pop();if(waDrawerOpen)renderWaMessages();break;
+  }
+}
+function setDot(on){const d=document.getElementById('ws-dot');d.className='ws-dot'+(on?' live':'');document.getElementById('ws-lbl').textContent=on?'Connected':'Disconnected';}
+function updateTask(t){const i=tasks.findIndex(x=>x.id===t.id);if(i!==-1)tasks[i]=t;else tasks.unshift(t);}
+async function api(method,path,body){const r=await fetch(path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});return r.json();}
+
+function cardColor(t){if(t.status==='done')return'green';if(t.source==='whatsapp')return'orange';if(t.source==='meet')return'pink';if(t.status==='watching')return'blue';return'yellow';}
+function fmtDate(iso){if(!iso)return'';const d=new Date(iso),now=new Date();if(d.toDateString()===now.toDateString())return'Today';return d.toLocaleDateString([],{month:'short',day:'numeric'});}
+function fmtTime(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+d.toLocaleDateString([],{month:'short',day:'numeric'});}
+function fmtTimestamp(iso){if(!iso)return'';return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+function renderAll(){
+  let filtered=tasks;
+  if(searchQuery)filtered=filtered.filter(t=>t.name.toLowerCase().includes(searchQuery)||(t.description||'').toLowerCase().includes(searchQuery));
+  if(filter==='whatsapp')filtered=filtered.filter(t=>t.source==='whatsapp');
+  else if(filter==='meet')filtered=filtered.filter(t=>t.source==='meet');
+  else if(filter==='manual')filtered=filtered.filter(t=>!t.source||t.source==='manual');
+  else if(filter!=='all')filtered=filtered.filter(t=>t.status===filter);
+  if(!tagFilters.pending)filtered=filtered.filter(t=>t.status!=='pending');
+  if(!tagFilters.watching)filtered=filtered.filter(t=>t.status!=='watching');
+  if(!tagFilters.done)filtered=filtered.filter(t=>t.status!=='done');
+  const c={all:tasks.length,pending:0,watching:0,done:0,wa:0,meet:0,manual:0};
+  tasks.forEach(t=>{c[t.status]=(c[t.status]||0)+1;if(t.source==='whatsapp')c.wa++;else if(t.source==='meet')c.meet++;else c.manual++;});
+  ['all','pending','watching','done'].forEach(k=>{const el=document.getElementById('cnt-'+k);if(el)el.textContent=c[k]||0;});
+  const a2=document.getElementById('cnt-all2');if(a2)a2.textContent=c.all;
+  const cw=document.getElementById('cnt-wa');if(cw)cw.textContent=c.wa;
+  const cm=document.getElementById('cnt-meet');if(cm)cm.textContent=c.meet;
+  const cn=document.getElementById('cnt-manual');if(cn)cn.textContent=c.manual;
+  const empty=document.getElementById('wall-empty'),grid=document.getElementById('task-grid');
+  if(filtered.length===0){empty.style.display='block';grid.innerHTML=addCardHTML();return;}
+  empty.style.display='none';
+  grid.innerHTML=filtered.map(taskCardHTML).join('')+addCardHTML();
+}
+function taskCardHTML(t){
+  const col=cardColor(t);
+  const status=t.status==='done'?'Done':t.status==='watching'?'Watching':'Pending';
+  const body=(t.description||'').length>140?(t.description||'').substring(0,140)+'…':(t.description||'');
+  return`<div class="s-card c-${col}" onclick="openDetail('${t.id}')"><div class="s-card-top"><div>${t.source==='whatsapp'?`<span class="s-src-badge badge-wa">💬 WhatsApp</span>`:t.source==='meet'?`<span class="s-src-badge badge-meet">🎥 Meet</span>`:''}</div><div class="card-dots"><span></span><span></span><span></span></div></div><div class="s-card-title">${esc(t.name)}</div>${body?`<div class="s-card-body">${esc(body)}</div>`:''} ${t.watchPath?`<div class="s-card-path">${esc(t.watchPath)}</div>`:''}<div class="s-card-footer"><span class="s-card-time">${fmtDate(t.completedAt||t.createdAt)}</span><span class="s-card-badge">${status}</span></div></div>`;
+}
+function addCardHTML(){return`<div class="s-card-add" onclick="openAddModal()"><div class="s-card-add-plus">+</div></div>`;}
+
+function openDetail(id){selectedId=id;const t=tasks.find(x=>x.id===id);if(!t)return;document.getElementById('det-modal-title').textContent=t.name.length>36?t.name.substring(0,36)+'…':t.name;renderDetailContent(t);document.getElementById('detail-modal').classList.add('open');}
+function closeDetail(){selectedId=null;document.getElementById('detail-modal').classList.remove('open');}
+function renderDetailContent(task){
+  const cm={yellow:'#f59e0b',blue:'#3b82f6',green:'#22c55e',orange:'#f97316',pink:'#ec4899'};
+  const bar=cm[cardColor(task)]||'#6366f1';
+  const sl=task.status==='done'?'Done':task.status==='watching'?'Watching':'Pending';
+  document.getElementById('detail-content').innerHTML=`
+    <div class="det-strip" style="background:${bar}"></div>
+    <div class="det-meta-row"><div class="det-sdot ${task.status}"></div><span class="det-spill spl-${task.status}">${sl}</span>${task.source==='whatsapp'?`<span class="s-src-badge badge-wa" style="font-size:11px">💬 WhatsApp</span>`:''}${task.source==='meet'?`<span class="s-src-badge badge-meet" style="font-size:11px">🎥 Meet</span>`:''}</div>
+    <div class="det-title">${esc(task.name)}</div>
+    ${task.description?`<div class="det-desc">${esc(task.description)}</div>`:''}
+    <div class="det-actions">
+      ${task.status!=='watching'?`<button class="det-act da-watch" onclick="detAction('${task.id}','watch')">▶ Watch</button>`:''}
+      ${task.status!=='done'?`<button class="det-act da-done" onclick="detAction('${task.id}','done')">✓ Done</button>`:''}
+      ${task.status!=='pending'?`<button class="det-act da-reset" onclick="detAction('${task.id}','reset')">↺ Reset</button>`:''}
+      <button class="det-act da-del" onclick="detDelete('${task.id}')">🗑 Delete</button>
+    </div>
+    <div class="det-fields">
+      ${task.watchPath?`<div><div class="det-fl">Watch Path</div><div class="det-fv mono">${esc(task.watchPath)}</div></div>`:''}
+      ${task.watchPath?`<div><div class="det-fl">Pattern</div><div class="det-fv mono">${esc(task.pattern||'*')}</div></div>`:''}
+      ${task.lastChangedFile?`<div><div class="det-fl">Triggered By</div><div class="det-fv mono" style="font-size:10px">${esc(task.lastChangedFile)}</div></div>`:''}
+      ${task.sourceContact?`<div><div class="det-fl">${task.source==='whatsapp'?'From WhatsApp':'From Meeting'}</div><div class="det-fv">${esc(task.sourceContact)}</div></div>`:''}
+      <div><div class="det-fl">Created</div><div class="det-fv">${fmtTime(task.createdAt)}</div></div>
+      ${task.completedAt?`<div><div class="det-fl">Completed</div><div class="det-fv">${fmtTime(task.completedAt)}</div></div>`:''}
+    </div>`;
+}
+async function detAction(id,action){const task=await api('PUT',`/api/tasks/${id}/${action}`);updateTask(task);renderDetailContent(task);renderAll();}
+async function detDelete(id){if(!confirm('Delete this task?'))return;await api('DELETE',`/api/tasks/${id}`);tasks=tasks.filter(t=>t.id!==id);closeDetail();renderAll();}
+
+function setFilter(f,btn){
+  filter=f;
+  document.querySelectorAll('.nav-btn,.src-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAll();
+}
+function onSearch(v){searchQuery=v.toLowerCase();renderAll();}
+function toggleTagFilter(status,el){tagFilters[status]=!tagFilters[status];el.classList.toggle('tc-on',tagFilters[status]);renderAll();}
+
+function openAddModal(){['inp-name','inp-desc','inp-path'].forEach(id=>document.getElementById(id).value='');document.getElementById('inp-pattern').value='*';document.getElementById('inp-type').value='folder';document.getElementById('task-modal').classList.add('open');setTimeout(()=>document.getElementById('inp-name').focus(),50);}
+function closeModal(){document.getElementById('task-modal').classList.remove('open');}
+async function saveTask(){const name=document.getElementById('inp-name').value.trim();if(!name){alert('Task name required.');return;}const task=await api('POST','/api/tasks',{name,description:document.getElementById('inp-desc').value.trim(),watchPath:document.getElementById('inp-path').value.trim(),watchType:document.getElementById('inp-type').value,pattern:document.getElementById('inp-pattern').value.trim()||'*'});tasks.unshift(task);closeModal();renderAll();}
+
+async function openBrowser(){fbCurrentPath=document.getElementById('inp-path').value.trim()||'C:\\';fbSelectedFile=null;await loadDir(fbCurrentPath);document.getElementById('fb-modal').classList.add('open');}
+function closeBrowser(){document.getElementById('fb-modal').classList.remove('open');}
+async function loadDir(dir){try{const data=await api('POST','/api/browse',{dir});fbCurrentPath=data.path;document.getElementById('fb-path').textContent=fbCurrentPath;document.getElementById('fb-list').innerHTML=`<div class="fb-item fb-up" onclick="loadDir('${esc(data.parent)}')">⬆ ..</div>`+data.entries.map(e=>`<div class="fb-item" onclick="${e.isDir?`loadDir('${esc(data.path+'\\\\'+e.name)}')`:`selectFile('${esc(data.path+'\\\\'+e.name)}')`}">${e.isDir?'📁':'📄'} ${esc(e.name)}</div>`).join('');}catch(e){alert('Browse error: '+e.message);}}
+function selectFile(p){fbSelectedFile=p;}
+function selectPath(fm){document.getElementById('inp-path').value=fm&&fbSelectedFile?fbSelectedFile:fbCurrentPath;document.getElementById('inp-type').value=fm?'file':'folder';closeBrowser();}
+
+function renderWaHeader(){
+  const pill=document.getElementById('wa-pill'),lbl=document.getElementById('wa-pill-lbl'),sbl=document.getElementById('wa-sb-label');
+  pill.className='hdr-pill wa-pill';
+  if(waStatus==='ready'){pill.classList.add('connected');lbl.textContent=waInfo?.name?.split(' ')[0]||'Connected';sbl.textContent='WhatsApp — Online';}
+  else if(['qr','initializing','installing','reconnecting'].includes(waStatus)){pill.classList.add('connecting');lbl.textContent=waStatus==='qr'?'Scan QR':waStatus==='reconnecting'?'Reconnecting…':'Connecting…';sbl.textContent='WhatsApp — '+lbl.textContent;}
+  else{lbl.textContent='WhatsApp';sbl.textContent='WhatsApp';}
+}
+function toggleWaDrawer(){waDrawerOpen=!waDrawerOpen;document.getElementById('wa-drawer').classList.toggle('open',waDrawerOpen);if(waDrawerOpen){renderWaPanel();fetch('/api/whatsapp/messages').then(r=>r.json()).then(msgs=>{waMessages=msgs;renderWaMessages();});}}
+function renderWaPanel(){
+  const body=document.getElementById('wa-body');if(!body)return;
+  if(waStatus==='disconnected'){body.innerHTML=`<div class="state-center"><div class="state-em">💬</div><div class="state-title">Connect WhatsApp</div><div class="state-sub">Auto-detect tasks from messages.<br>No API needed — just scan a QR code.</div><button class="big-btn" onclick="connectWA()">Connect WhatsApp</button><div class="state-note">⚠ First launch downloads ~170MB (one-time)</div></div>`;return;}
+  if(waStatus==='installing'){body.innerHTML=`<div class="state-center"><div class="spinner"></div><div class="state-title">Downloading…</div><div class="state-sub">First-time only, about 170MB.</div></div>`;return;}
+  if(waStatus==='initializing'){body.innerHTML=`<div class="state-center"><div class="spinner"></div><div class="state-title">Starting WhatsApp…</div><div class="state-sub">This may take 10–30 seconds.</div></div>`;return;}
+  if(waStatus==='reconnecting'){body.innerHTML=`<div class="state-center"><div class="spinner"></div><div class="state-title">Reconnecting…</div><div class="state-sub">Connection lost. Retrying automatically.</div><button style="margin-top:8px;background:var(--input-bg);border:1.5px solid var(--border2);color:var(--t2);padding:10px 22px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)" onclick="disconnectWA()">Cancel</button></div>`;return;}
+  if(waStatus==='qr'){body.innerHTML=`<div class="qr-wrap">${waQrDataUrl?`<img class="qr-img" src="${waQrDataUrl}" alt="QR">`:`<div style="width:210px;height:210px;background:var(--input-bg);border-radius:13px;margin:0 auto 12px;display:grid;place-items:center;color:var(--t3);font-size:13px">Loading QR…</div>`}<div class="qr-hint">Scan with your phone to link</div><div class="qr-steps"><div class="qr-step"><div class="sn">1</div><div>Open <strong>WhatsApp</strong> on your phone</div></div><div class="qr-step"><div class="sn">2</div><div>Go to <strong>Settings → Linked Devices</strong></div></div><div class="qr-step"><div class="sn">3</div><div>Tap <strong>Link a Device</strong> and scan</div></div></div></div>`;return;}
+  body.innerHTML=`<div class="wa-profile"><div class="wa-ava">👤</div><div><div class="wa-profile-name">${esc(waInfo?.name||'Connected')}</div><div class="wa-profile-num">+${esc(waInfo?.number||'')}</div></div></div><div><div class="dr-title">Auto-Task Settings</div><div class="tog-row"><span class="tog-label">Auto-create tasks from messages</span><label class="sw"><input type="checkbox" id="tog-auto" ${waSettings.autoCreate?'checked':''} onchange="updateWaSetting('autoCreate',this.checked)"><span class="sw-sl"></span></label></div><div class="tog-row"><span class="tog-label">Monitor group chats</span><label class="sw"><input type="checkbox" id="tog-groups" ${waSettings.monitorGroups?'checked':''} onchange="onGroupToggle(this.checked)"><span class="sw-sl"></span></label></div><div id="wa-groups-section" style="margin-top:4px"></div></div><div class="dr-sep"></div><div><div class="dr-title">Keywords</div><div class="kw-wrap" id="kw-list"></div><div class="dr-row"><input class="dr-inp wa-inp" type="text" id="kw-inp" placeholder="Add keyword…" onkeydown="if(event.key==='Enter')addKeyword()"><button class="dr-btn wa-btn-s" onclick="addKeyword()">Add</button></div></div><div class="dr-sep"></div><div><div class="dr-title">Recent Messages</div><div class="log-wrap" id="msg-log"></div></div><button class="danger-btn" onclick="disconnectWA()">Disconnect WhatsApp</button>`;
+  renderKeywords();renderWaMessages();renderGroupSection();
+}
+function renderKeywords(){const el=document.getElementById('kw-list');if(!el)return;el.innerHTML=waSettings.keywords.map((k,i)=>`<span class="kw-chip">${esc(k)}<button onclick="removeKeyword(${i})">×</button></span>`).join('');}
+async function addKeyword(){const inp=document.getElementById('kw-inp');const v=inp.value.trim().toLowerCase();if(!v||waSettings.keywords.includes(v)){inp.value='';return;}waSettings.keywords.push(v);await api('PUT','/api/whatsapp/settings',{keywords:waSettings.keywords});inp.value='';renderKeywords();}
+async function removeKeyword(i){waSettings.keywords.splice(i,1);await api('PUT','/api/whatsapp/settings',{keywords:waSettings.keywords});renderKeywords();}
+async function updateWaSetting(key,val){waSettings[key]=val;await api('PUT','/api/whatsapp/settings',{[key]:val});}
+async function onGroupToggle(checked){await updateWaSetting('monitorGroups',checked);renderGroupSection();if(checked&&waGroups.length===0)loadWaGroups();}
+async function loadWaGroups(){const data=await fetch('/api/whatsapp/groups').then(r=>r.json()).catch(()=>[]);waGroups=Array.isArray(data)?data:[];renderGroupSection();}
+function renderGroupSection(){const el=document.getElementById('wa-groups-section');if(!el)return;if(!waSettings.monitorGroups){el.innerHTML='';return;}const sel=waSettings.monitoredGroups||[];el.innerHTML=`<div style="margin-top:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;font-weight:600;color:var(--t2)">Select Groups to Monitor</span><button class="dr-btn wa-btn-s" style="padding:4px 10px;font-size:11px" onclick="loadWaGroups()">↻ Refresh</button></div>${waGroups.length===0?`<div class="empty-log" style="padding:10px 0">No groups found — click Refresh</div>`:waGroups.map(g=>{const on=sel.includes(g.id);return`<div class="tog-row" style="padding:7px 0;border-bottom:1px solid var(--border)"><div style="min-width:0;flex:1"><div style="font-size:13px;font-weight:500;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(g.name)}</div><div style="font-size:11px;color:var(--t3)">${g.memberCount} member${g.memberCount!==1?'s':''}</div></div><label class="sw" style="flex-shrink:0;margin-left:8px"><input type="checkbox" ${on?'checked':''} onchange="toggleGroup('${g.id.replace(/'/g,"\\'")}',this.checked)"><span class="sw-sl"></span></label></div>`;}).join('')}<div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:center">${sel.length===0?'All groups monitored (none selected)':'Monitoring '+sel.length+' group'+(sel.length!==1?'s':'')}</div></div>`;}
+async function toggleGroup(id,selected){const groups=[...(waSettings.monitoredGroups||[])];if(selected&&!groups.includes(id))groups.push(id);else if(!selected){const i=groups.indexOf(id);if(i>-1)groups.splice(i,1);}waSettings.monitoredGroups=groups;await api('PUT','/api/whatsapp/settings',{monitoredGroups:groups});renderGroupSection();}
+function renderWaMessages(){const el=document.getElementById('msg-log');if(!el)return;if(!waMessages.length){el.innerHTML='<div class="empty-log">No messages yet</div>';return;}el.innerHTML=waMessages.slice(0,30).map(m=>`<div class="log-entry${m.isTask?' task-hi':''}"><div class="log-sender wa-col">${esc(m.sender)}<span class="log-ts">${fmtTimestamp(m.time)}</span></div><div class="log-txt">${esc(m.body.length>120?m.body.substring(0,120)+'…':m.body)}</div>${m.isTask?'<div class="log-flg wa-f">💬 Task detected</div>':''}</div>`).join('');}
+async function connectWA(){waStatus='initializing';renderWaPanel();renderWaHeader();await api('POST','/api/whatsapp/connect');}
+async function disconnectWA(){if(!confirm('Disconnect WhatsApp? Session is saved — reconnect without scanning QR again.'))return;await api('POST','/api/whatsapp/disconnect');waStatus='disconnected';waInfo=null;waQrDataUrl=null;renderWaHeader();renderWaPanel();}
+
+function renderMeetHeader(){const pill=document.getElementById('meet-pill'),lbl=document.getElementById('meet-pill-lbl'),sbl=document.getElementById('meet-sb-label');if(meetStatus.inMeeting){pill.classList.add('live');lbl.textContent='In Meeting';sbl.textContent='Meet — Live';}else{pill.classList.remove('live');lbl.textContent='Google Meet';sbl.textContent='Google Meet';}}
+function toggleMeetDrawer(){meetDrawerOpen=!meetDrawerOpen;document.getElementById('meet-drawer').classList.toggle('open',meetDrawerOpen);if(meetDrawerOpen){renderMeetPanel();fetch('/api/meet/captions').then(r=>r.json()).then(d=>{meetCaptions=d;renderMeetCaptions();});fetch('/api/meet/settings').then(r=>r.json()).then(d=>{meetSettings=d;renderMeetPanel();});fetch('/api/meet/notes').then(r=>r.json()).then(d=>{meetNotes=d;renderMeetNotes();});}}
+const EXT_PATH=String.raw`C:\Users\Darren\Desktop\TaskWatcher\extension`;
+function renderMeetPanel(){
+  const body=document.getElementById('meet-body');if(!body)return;
+  const live=meetStatus.inMeeting;
+  body.innerHTML=`<div class="status-banner${live?' live':''}"><div class="sb-ldot"></div><div class="banner-info"><div class="sb-info-title">${live?'In Meeting — '+esc(meetStatus.title||'Untitled'):'Not in a meeting'}</div><div class="sb-info-sub">${live?'Captions are being monitored':'Join a Google Meet to start monitoring'}</div></div></div><div><div class="dr-title">Your Display Name</div><p style="font-size:12px;color:var(--t3);margin-bottom:9px">Tasks created when this name is mentioned</p><div class="dr-row"><input class="dr-inp mt-inp" type="text" id="mt-name-inp" placeholder="e.g. Darren…" value="${esc(meetSettings.userName||'')}"><button class="dr-btn mt-btn-s" onclick="saveMeetName()">Save</button></div></div><div><div class="dr-title">Settings</div><div class="tog-row"><span class="tog-label">Auto-create tasks from captions</span><label class="sw mt-sw"><input type="checkbox" id="mt-tog-auto" ${meetSettings.autoCreate?'checked':''} onchange="updateMeetSetting('autoCreate',this.checked)"><span class="sw-sl"></span></label></div><div class="tog-row"><span class="tog-label">Only when my name is mentioned</span><label class="sw mt-sw"><input type="checkbox" id="mt-tog-name" ${meetSettings.requireNameMention?'checked':''} onchange="updateMeetSetting('requireNameMention',this.checked)"><span class="sw-sl"></span></label></div></div><div class="dr-sep"></div><div><div class="dr-title">Live Captions</div><div class="log-wrap" id="caption-log"></div></div><div class="dr-sep"></div><div><div class="dr-title">Meeting Notes</div><div id="meet-notes-list"></div></div><div class="dr-sep"></div><div><div class="dr-title">Extension Setup</div><div class="setup-steps"><div class="setup-step"><div class="sn mt">1</div><div>Open Brave/Chrome → <strong>brave://extensions</strong></div></div><div class="setup-step"><div class="sn mt">2</div><div>Enable <strong>Developer mode</strong> (top right)</div></div><div class="setup-step"><div class="sn mt">3</div><div>Click <strong>Load unpacked</strong> → select:<div class="path-chip">${esc(EXT_PATH)}</div></div></div><div class="setup-step"><div class="sn mt">4</div><div>Join a Meet → click <strong>CC</strong> to enable captions</div></div></div></div>`;
+  renderMeetCaptions();renderMeetNotes();
+}
+function renderMeetCaptions(){const el=document.getElementById('caption-log');if(!el)return;if(!meetCaptions.length){el.innerHTML='<div class="empty-log">Captions appear here when CC is on</div>';return;}el.innerHTML=meetCaptions.slice(0,40).map(c=>`<div class="log-entry${c.isTask?' meet-hi':''}"><div class="log-sender meet-col">${esc(c.speaker)}<span class="log-ts">${fmtTimestamp(c.time)}</span></div><div class="log-txt">${esc(c.text.length>120?c.text.substring(0,120)+'…':c.text)}</div>${c.isTask?'<div class="log-flg meet-f">🔴 Task detected</div>':''}</div>`).join('');}
+function renderMeetNotes(){const el=document.getElementById('meet-notes-list');if(!el)return;if(!meetNotes.length){el.innerHTML='<div class="empty-log">Notes are saved when you leave a meeting.</div>';return;}el.innerHTML=meetNotes.map(n=>{const d=new Date(n.startTime);const dur=n.endTime?Math.round((new Date(n.endTime)-d)/60000):null;return`<div class="note-card" id="note-${n.id}"><div class="note-hdr" onclick="toggleNote('${n.id}')"><span style="font-size:15px;flex-shrink:0">📝</span><div class="note-meta"><div class="note-meta-t">${esc(n.title)}</div><div class="note-meta-i">${d.toLocaleDateString('en-MY',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'})}${dur?` · ${dur}m`:''} · ${n.captionCount} lines</div></div><div class="note-acts"><button class="note-act" onclick="event.stopPropagation();copyMeetNote('${n.id}')" title="Copy">📋</button><button class="note-act" onclick="event.stopPropagation();deleteMeetNote('${n.id}')" title="Delete">🗑</button><span class="note-chev" id="chev-${n.id}">▶</span></div></div><div class="note-body closed" id="nbody-${n.id}"></div></div>`;}).join('');}
+function toggleNote(id){const body=document.getElementById(`nbody-${id}`);const chev=document.getElementById(`chev-${id}`);if(body.classList.contains('closed')){body.classList.remove('closed');chev.classList.add('open');if(!body.dataset.loaded){body.dataset.loaded='1';body.innerHTML='<div class="empty-log">Loading…</div>';fetch(`/api/meet/notes/${id}`).then(r=>r.json()).then(note=>{body.innerHTML=note.captions.map(c=>`<div class="note-cap${c.isTask?' is-task':''}"><span class="cap-speaker">${esc(c.speaker)}</span><span class="cap-time">${fmtTimestamp(c.time)}</span>${c.isTask?'<span class="cap-badge">task</span>':''}<div class="cap-text">${esc(c.text)}</div></div>`).join('');});}}else{body.classList.add('closed');chev.classList.remove('open');}}
+async function copyMeetNote(id){const note=await fetch(`/api/meet/notes/${id}`).then(r=>r.json());const d=new Date(note.startTime);const dur=note.endTime?Math.round((new Date(note.endTime)-d)/60000):null;const lines=[`MEETING NOTES: ${note.title}`,`Date: ${d.toLocaleDateString('en-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`,`Time: ${d.toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'})}${dur?` (${dur} min)`:''}`,'','─'.repeat(40),'TRANSCRIPT','─'.repeat(40),...note.captions.map(c=>`[${fmtTimestamp(c.time)}] ${c.speaker}: ${c.text}`)];const tasks=note.captions.filter(c=>c.isTask);if(tasks.length){lines.push('','─'.repeat(40),'TASKS DETECTED','─'.repeat(40));tasks.forEach(c=>lines.push(`• [${fmtTimestamp(c.time)}] ${c.speaker}: ${c.text}`));}await navigator.clipboard.writeText(lines.join('\n'));showToast('Copied','Meeting notes copied to clipboard','','meet');}
+async function deleteMeetNote(id){if(!confirm('Delete this note?'))return;await api('DELETE',`/api/meet/notes/${id}`);meetNotes=meetNotes.filter(n=>n.id!==id);renderMeetNotes();}
+async function saveMeetName(){const v=document.getElementById('mt-name-inp').value.trim();meetSettings.userName=v;await api('PUT','/api/meet/settings',{userName:v});showToast('Name saved',v?`Will detect "${v}" in captions`:'Name detection off','','meet');}
+async function updateMeetSetting(key,val){meetSettings[key]=val;await api('PUT','/api/meet/settings',{[key]:val});}
+
+function toggleTheme(){const html=document.documentElement;const dark=html.getAttribute('data-theme')==='dark';html.setAttribute('data-theme',dark?'light':'dark');document.getElementById('theme-btn').textContent=dark?'🌙':'☀️';}
+
+function showToast(title,line1,line2,type='green'){const c=document.getElementById('toasts');const el=document.createElement('div');el.className='toast t-'+type;el.innerHTML=`<div class="toast-dot"></div><div><div class="toast-title">${esc(title)}</div>${line1?`<div class="toast-body">${esc(line1)}</div>`:''}${line2?`<div class="toast-sub">${esc(line2)}</div>`:''}</div>`;c.appendChild(el);setTimeout(()=>{el.classList.add('fading');setTimeout(()=>el.remove(),250);},5500);}
+function beep(freq){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=freq;g.gain.value=.05;o.start();o.stop(ctx.currentTime+.1);}catch{}}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeBrowser();closeDetail();if(waDrawerOpen){waDrawerOpen=false;document.getElementById('wa-drawer').classList.remove('open');}if(meetDrawerOpen){meetDrawerOpen=false;document.getElementById('meet-drawer').classList.remove('open');}}
+  if(e.key==='Enter'&&document.getElementById('task-modal').classList.contains('open')&&document.activeElement.tagName!=='TEXTAREA')saveTask();
+});
+
+connectWS();
+fetch('/api/tasks').then(r=>r.json()).then(d=>{tasks=d;renderAll();});
+fetch('/api/whatsapp/status').then(r=>r.json()).then(d=>{waStatus=d.status;waInfo=d.info;waQrDataUrl=d.qrDataUrl;renderWaHeader();});
+fetch('/api/meet/status').then(r=>r.json()).then(d=>{meetStatus=d.meetStatus||meetStatus;renderMeetHeader();});
+fetch('/api/meet/settings').then(r=>r.json()).then(d=>{meetSettings=d;});
+(()=>{if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');document.getElementById('theme-btn').textContent='☀️';}})();
+</script>
+</body>
+</html>
