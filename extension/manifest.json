@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Task Watcher – Meet Monitor",
+  "version": "1.0",
+  "description": "Sends Google Meet captions to Task Watcher. Detects when your name is mentioned as a task.",
+  "host_permissions": [
+    "https://meet.google.com/*",
+    "http://localhost:3747/*",
+    "http://127.0.0.1:3747/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
